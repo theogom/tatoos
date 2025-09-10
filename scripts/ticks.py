@@ -1,5 +1,6 @@
 import math
 import matplotlib.pyplot as plt
+from matplotlib.patches import Arc
 
 MIN_TICK_LENGTH = 0.5
 MAX_TICK_LENGTH = 3.0
@@ -21,9 +22,22 @@ def draw_tatoo(tick_lengths: list[float], tick_positions: list[int] | None = Non
     for position, length in zip(tick_positions, tick_lengths):
         ax.vlines(position, -length / 2, length / 2, color="black", linewidth=1)
 
+        if position in (6, 7):
+            add_ring(ax, (position, length / 2 + 0.05), 0, 180)
+            add_ring(ax, (position, -length / 2 - 0.05), 180, 0)
+
     ax.axis("off")
     plt.show()
 
+def add_ring(ax, center: tuple[float, float], theta1: float, theta2: float):
+    """Add a ring (arc) to the plot."""
+    arc = Arc(
+        center,
+        width=0.3, height=0.3, # ellipse size
+        theta1=theta1, theta2=theta2, # start and end angle (half circle)
+        color="black", lw=1
+    )
+    ax.add_patch(arc)
 
 def to_binary_ticks(word: str):
     """Convert string to ticks by using binary"""
